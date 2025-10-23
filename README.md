@@ -6,7 +6,7 @@ This Android application demonstrates **OAuth2 and OpenID Connect** authenticati
 
 ## Features
 
-* **OAuth2 Authorization Code + ID Token Flow**
+* **Authorization with OAuth2 library(OpenId AppAuth library)**
 * **Secure token storage** using `EncryptedSharedPreferences`
 * **End-session logout** with identity provider
 * **Custom redirect URI handling** with AppAuth
