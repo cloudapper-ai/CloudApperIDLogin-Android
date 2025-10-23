@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -36,6 +37,8 @@ import net.openid.appauth.EndSessionRequest
 class HomeActivity : AppCompatActivity() {
 
     lateinit var prefs: SharedPreferences
+    private var accessToken = ""
+    private var refreshToken = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,12 +50,23 @@ class HomeActivity : AppCompatActivity() {
             EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
         )
 
+        accessToken = prefs.getString("access_token", "") ?: ""
+        refreshToken = prefs.getString("refresh_token", "") ?: ""
+
         enableEdgeToEdge()
         setContent {
             OpenIdDemoTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
 
                     var isLoading by remember {
+                        mutableStateOf(false)
+                    }
+
+                    var showAccessToken by remember {
+                        mutableStateOf(false)
+                    }
+
+                    var showRefreshToken by remember {
                         mutableStateOf(false)
                     }
 
@@ -90,6 +104,35 @@ class HomeActivity : AppCompatActivity() {
                             } else {
                                 Text(text = "Logout")
                             }
+                        }
+
+                        Button(
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary),
+                            modifier = Modifier.padding(top = 64.dp),
+                            onClick = {
+                                showAccessToken = true
+                            }) {
+                            Text(text = "Show ACCESS Token")
+                        }
+
+                        Button(
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary),
+                            modifier = Modifier.padding(top = 16.dp),
+                            onClick = {
+                                showRefreshToken = true
+                            }) {
+                            Text(text = "Show REFRESH Token")
+                        }
+
+                        if (showAccessToken || showRefreshToken) {
+                            BasicAlertDialog(
+                                title = if (showAccessToken) "Access Token" else "Refresh Token",
+                                message = if (showAccessToken) accessToken else refreshToken,
+                                onDismiss = {
+                                    showAccessToken = false
+                                    showRefreshToken = false
+                                }
+                            )
                         }
                     }
 
