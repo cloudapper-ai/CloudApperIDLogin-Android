@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.OpenIdDemo" >
         <activity
-            android:name="net.openid.appauth.RedirectUriReceiverActivity"
+            android:name=".RedirectUriReceiverActivity"
             tools:node="replace"
             android:exported="true">
             <intent-filter>
