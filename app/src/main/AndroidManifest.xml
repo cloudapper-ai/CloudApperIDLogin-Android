@@ -22,8 +22,7 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
 
-                <data android:scheme="com.cloudapper.auth"/>
-                <data android:scheme="com.cloudapper.auth2"/>
+                <data android:scheme="{YOUR_REDIRECT_SCHEME}"/>
             </intent-filter>
         </activity>
 

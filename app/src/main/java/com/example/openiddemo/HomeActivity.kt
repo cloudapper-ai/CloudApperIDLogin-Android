@@ -36,7 +36,7 @@ import net.openid.appauth.EndSessionRequest
 
 class HomeActivity : AppCompatActivity() {
 
-    lateinit var prefs: SharedPreferences
+    private lateinit var prefs: SharedPreferences
     private var accessToken = ""
     private var refreshToken = ""
 
@@ -44,14 +44,14 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         prefs = EncryptedSharedPreferences.create(
             this,
-            "auth_prefs",
+            PreferencesConstants.PREF_NAME,
             MasterKey.Builder(this).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build(),
             EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
             EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
         )
 
-        accessToken = prefs.getString("access_token", "") ?: ""
-        refreshToken = prefs.getString("refresh_token", "") ?: ""
+        accessToken = prefs.getString(PreferencesConstants.KEY_ACCESS_TOKEN, "") ?: ""
+        refreshToken = prefs.getString(PreferencesConstants.KEY_REFRESH_TOKEN, "") ?: ""
 
         enableEdgeToEdge()
         setContent {
@@ -156,19 +156,19 @@ class HomeActivity : AppCompatActivity() {
 
     fun logout() {
         val serviceConfiguration = AuthorizationServiceConfiguration(
-            AuthConfig.AuthorizeEndpoint.toUri(),
-            AuthConfig.TokenEndpoint.toUri(),
+            AuthConfig.AUTHORIZE_ENDPOINT.toUri(),
+            AuthConfig.TOKEN_ENDPOINT.toUri(),
             null, // registration endpoint
-            AuthConfig.EndSessionEndpoint.toUri()
+            AuthConfig.END_SESSION_ENDPOINT.toUri()
         )
 
-        val idToken = prefs.getString("id_token", null)
+        val idToken = prefs.getString(PreferencesConstants.KEY_ID_TOKEN, null)
 
         val endSessionRequest = EndSessionRequest.Builder(
             serviceConfiguration,
         )
             .setIdTokenHint(idToken)
-            .setPostLogoutRedirectUri(AuthConfig.SignOutRedirectUri.toUri())
+            .setPostLogoutRedirectUri(AuthConfig.SIGN_OUT_REDIRECT_URI.toUri())
             .build()
 
         val authService = AuthorizationService(this)

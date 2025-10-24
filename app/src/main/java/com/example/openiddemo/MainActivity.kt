@@ -41,9 +41,6 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var authService: AuthorizationService
 
-    private var authRequest: AuthorizationRequest? = null
-
-
     private val getAuthResponse =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             val dataIntent = it.data ?: return@registerForActivityResult
@@ -153,16 +150,16 @@ class MainActivity : ComponentActivity() {
     private fun saveTokens(accessToken: String?, idToken: String?, refreshToken: String?) {
         val prefs = EncryptedSharedPreferences.create(
             this@MainActivity,
-            "auth_prefs",
+            PreferencesConstants.PREF_NAME,
             MasterKey.Builder(this).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build(),
             EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
             EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
         )
 
         prefs.edit().apply {
-            putString("access_token", accessToken)
-            putString("id_token", idToken)
-            putString("refresh_token", refreshToken)
+            putString(PreferencesConstants.KEY_ACCESS_TOKEN, accessToken)
+            putString(PreferencesConstants.KEY_ID_TOKEN, idToken)
+            putString(PreferencesConstants.KEY_REFRESH_TOKEN, refreshToken)
             apply()
         }
     }
@@ -170,40 +167,38 @@ class MainActivity : ComponentActivity() {
     private fun isLoggedIn(): Boolean {
         val prefs = EncryptedSharedPreferences.create(
             this,
-            "auth_prefs",
+            PreferencesConstants.PREF_NAME,
             MasterKey.Builder(this).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build(),
             EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
             EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
         )
 
-        val accessToken = prefs.getString("access_token", null)
+        val accessToken = prefs.getString(PreferencesConstants.KEY_ACCESS_TOKEN, null)
         return !accessToken.isNullOrEmpty()
     }
 
     fun getAuthRequest(): AuthorizationRequest {
         val serviceConfiguration = AuthorizationServiceConfiguration(
-            AuthConfig.AuthorizeEndpoint.toUri(),
-            AuthConfig.TokenEndpoint.toUri(),
+            AuthConfig.AUTHORIZE_ENDPOINT.toUri(),
+            AuthConfig.TOKEN_ENDPOINT.toUri(),
             null, // registration endpoint
-            AuthConfig.EndSessionEndpoint.toUri()
+            AuthConfig.END_SESSION_ENDPOINT.toUri()
         )
 
         return AuthorizationRequest.Builder(
             serviceConfiguration,
-            AuthConfig.ClientId,
-            AuthConfig.ResponseType,
-            AuthConfig.RedirectUri.toUri()
+            AuthConfig.CLIENT_ID,
+            AuthConfig.RESPONSE_TYPE,
+            AuthConfig.REDIRECT_URI.toUri()
         )
-            .setScope(AuthConfig.Scope)
+            .setScope(AuthConfig.SCOPE)
             .build()
     }
 
     private fun startLogin() {
-        if (authRequest == null) {
-            authRequest = getAuthRequest()
-        }
+        val authRequest = getAuthRequest()
 
-        Log.d("AuthDebug", "Authorization URL: ${authRequest!!.toUri()}")
+        Log.d("AuthDebug", "Authorization URL: ${authRequest.toUri()}")
 
         val authIntent = authService.getAuthorizationRequestIntent(authRequest!!)
         getAuthResponse.launch(authIntent)
