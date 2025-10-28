@@ -25,5 +25,5 @@ object AuthConfig {
         "openid profile email offline_access" // The list of permissions (scopes) the app is requesting. Please give correct scopes according to your authorization server
 
     const val RESPONSE_TYPE =
-        "code id_token" // Please put correct response type according to your authorization server
+        "code" // Please put correct response type according to your authorization server
 }
