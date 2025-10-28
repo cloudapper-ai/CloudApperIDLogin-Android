@@ -1,5 +1,7 @@
 package com.example.openiddemo
 
+import net.openid.appauth.ResponseTypeValues
+
 object AuthConfig {
     const val BASE_URL =
         "{YOUR_BASE_URL}"  // The base URL of the identity provider (authorization server).
@@ -25,5 +27,5 @@ object AuthConfig {
         "openid profile email offline_access" // The list of permissions (scopes) the app is requesting. Please give correct scopes according to your authorization server
 
     const val RESPONSE_TYPE =
-        "code" // Please put correct response type according to your authorization server
+        ResponseTypeValues.CODE // Please put correct response type according to your authorization server
 }
