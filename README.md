@@ -13,4 +13,4 @@ This Android application demonstrates **OAuth2 and OpenID Connect** authenticati
 * Sample UI to show **access token** and **refresh token**
 
 
-<a href="https://hizliresim.com/fu27jsq"><img src="https://i.hizliresim.com/fu27jsq.gif" alt="ff" width="400"></a>
+<a href="https://hizliresim.com/9nlkzvj"><img src="https://i.hizliresim.com/9nlkzvj.gif" alt="ff" width="400"></a>
